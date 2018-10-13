@@ -13,6 +13,13 @@ def index():
     '''
     return render_template('index.html')
 
+@main.route('/pickup')
+def pickuo():
+    '''
+    View root page function that returns the index page and its data
+    '''
+    return render_template('pickup.html')
+
 
 @main.route('/comment',methods = ['GET','POST'])
 @login_required
