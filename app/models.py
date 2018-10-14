@@ -18,7 +18,10 @@ class User(UserMixin,db.Model):
     pass_secure = db.Column(db.String(240))
     bio = db.Column(db.String(255))
     profile_pic_path = db.Column(db.String())
+    pitches=db.relationship('Pitch',backref = 'user',lazy="dynamic")
     # comments = db.relationship('Comment',backref = 'user',lazy = "dynamic")
+    # post_likes = db.relationship('PostLikes', backref=db.backref('user', lazy='joined'),
+                                 # lazy='dynamic', cascade='all, delete-orphan')
 
     @property
     def password(self):
@@ -46,17 +49,56 @@ class Role(db.Model):
         return f'User {self.name}'
 
 
-# class Comment(db.Model):
-#     __tablename__='comments'
-#
-#     posted = db.Column(db.DateTime,default=datetime.utcnow)
-#     user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
-#
-#     def save_comment(self):
-#         db.session.add(self)
-#         db.session.commit()
-#
-#     @classmethod
-#     def get_comments(cls,id):
-#         comments = Comment.query.filter_by(movie_id=id).all()
-#         return comments
+class Pitch(db.Model):
+    __tablename__='pitches'
+    id = db.Column(db.Integer,primary_key = True)
+    title = db.Column(db.String(200))
+    pitch = db.Column(db.String(1000))
+    posted = db.Column(db.DateTime,default=datetime.utcnow)
+    user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
+    # comments= db.relationship('Comment', backref='title', lazy='dynamic')
+        # ser_likes = db.relationship('PostLikes', backref=db.backref('post', lazy='joined'),
+        #                          lazy='dynamic', cascade='all, delete-orphan')
+    def __init__(self,id,title,pitch):
+        self.id = id
+        self.title = title
+
+        self.pitch = pitch
+
+
+
+    def save_pitch(self):
+        db.session.add(self)
+        db.session.commit()
+
+    @classmethod
+    def get_pitches(cls,id):
+        pitches = Pitch.query.order_by(Pitch.posted.desc())
+        return pitches
+
+
+
+
+class Comment(db.Model):
+
+    __tablename__='comments'
+    id = db.Column(db.Integer,primary_key = True)
+    comment = db.Column(db.String(240))
+    posted = db.Column(db.DateTime,default=datetime.utcnow)
+    user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
+    pitch_id=db.Column(db.Integer,db.ForeignKey("pitches.id"))
+
+    def __init__(self,id,title,pitch):
+        self.id = id
+        self.title = title
+
+        self.comment = comment
+
+    def save_comment(self):
+        db.session.add(self)
+        db.session.commit()
+
+    @classmethod
+    def get_comments(cls,id):
+            comments = Comment.query.filter_by(pitch_id=id).all()
+            return comments

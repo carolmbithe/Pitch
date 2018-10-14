@@ -1,8 +1,8 @@
 from flask import render_template,redirect,url_for,abort,request
 from . import main
 from flask_login import login_required
-from ..models import User
-from .forms import UpdateProfile
+from ..models import User,Comment,Pitch
+from .forms import UpdateProfile,CommentForm,PitchForm
 from .. import db,photos
 
 
@@ -13,19 +13,61 @@ def index():
     '''
     return render_template('index.html')
 
+@main.route('/product')
+def product():
+    '''
+    View root page function that returns the index page and its data
+    '''
+    return render_template('product.html')
+
+@main.route('/product/pitch',methods= ['GET','POST'])
+def pitch():
+    '''
+    View root page function that returns the index page and its data
+    '''
+    form=PitchForm()
+
+    if form.validate_on_submit():
+        title = form.title.data
+        pitch=form.pitch.data
+        new_pitch=Pitch(id=id,title=title,pitch=pitch)
+        new_pitch.save_pitch()
+        return redirect(url_for('product'))
+
+    return render_template('pitch.html',pitch_form=form)
+
+
+
 @main.route('/pickup')
-def pickuo():
+def pickup():
     '''
     View root page function that returns the index page and its data
     '''
     return render_template('pickup.html')
 
 
-@main.route('/comment',methods = ['GET','POST'])
+@main.route('/product/comment',methods= ['GET','POST'])
 @login_required
-def comment():
+def new_comment():
 
-    return render_template('comment.html')
+    # user = User.query.filter_by(username = uname).first()
+    # if user is None:
+    #     abort(404)
+
+    form = CommentForm()
+
+
+    if form.validate_on_submit():
+        title = form.title.data
+        comment = form.comment.data
+
+        new_comment = Comment(id=id,title=title,comment=comment)
+        new_comment.save_comment()
+
+        return redirect(url_for('auth.login'))
+
+
+    return render_template('comment.html',comment_form=form)
 
 @main.route('/user/<uname>')
 def profile(uname):
