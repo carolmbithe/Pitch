@@ -18,10 +18,27 @@ def product():
     '''
     View root page function that returns the index page and its data
     '''
+    pitches=Pitch.get_pitches()
     return render_template('product.html')
 
 @main.route('/product/pitch',methods= ['GET','POST'])
-def pitch():
+def productpitch():
+    '''
+    View root page function that returns the index page and its data
+    '''
+    form=PitchForm()
+
+    if form.validate_on_submit():
+        title = form.title.data
+        pitch=form.pitch.data
+        new_pitch=Pitch(id=id,title=title,pitch=pitch)
+        new_pitch.save_pitch()
+        return redirect(url_for('product'))
+
+    return render_template('pitch.html',pitch_form=form)
+
+@main.route('/pickup/pitch',methods= ['GET','POST'])
+def pickuppitch():
     '''
     View root page function that returns the index page and its data
     '''
@@ -43,10 +60,34 @@ def pickup():
     '''
     View root page function that returns the index page and its data
     '''
+    pitches=Pitch.get_pitches()
     return render_template('pickup.html')
 
 
 @main.route('/product/comment',methods= ['GET','POST'])
+@login_required
+def pnew_comment():
+
+    # user = User.query.filter_by(username = uname).first()
+    # if user is None:
+    #     abort(404)
+
+    form = CommentForm()
+
+
+    if form.validate_on_submit():
+        title = form.title.data
+        comment = form.comment.data
+
+        new_comment = Comment(id=id,title=title,comment=comment)
+        new_comment.save_comment()
+
+        return redirect(url_for('auth.login'))
+
+
+    return render_template('comment.html',comment_form=form)
+
+@main.route('/pickup/comment',methods= ['GET','POST'])
 @login_required
 def new_comment():
 

@@ -1,8 +1,26 @@
 
 
-<html>
-<body>
-<h1>PICKUP LINES</h1>
-<a class="ratings" href="/comment"> Write a comment</a>
-</body>
-</html>
+
+
+
+<div class="container">
+
+<h1>Pickup PITCHES!!</h1>
+<div class="col-md-6">
+<h2>Pitch your idea</h2>
+<button class="btn btn-primary"><a href="/pickup/pitch"> Post a product pitch</a></button>
+
+</div class="/div">
+<div class="col-md-6">
+
+  {% for pitch in pitches %}
+  <h2> {{ pitch.title}} </h2>
+        <p> {{ pitch.pitch  }}</p>
+    </div>
+  {% endfor %}
+
+<button class="btn btn danger">  <a href="/pickup/comment">comment</a></button>
+
+</div>
+</div>
+>

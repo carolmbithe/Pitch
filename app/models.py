@@ -72,7 +72,7 @@ class Pitch(db.Model):
         db.session.commit()
 
     @classmethod
-    def get_pitches(cls,id):
+    def get_pitches(cls):
         pitches = Pitch.query.order_by(Pitch.posted.desc())
         return pitches
 
@@ -88,9 +88,8 @@ class Comment(db.Model):
     user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
     pitch_id=db.Column(db.Integer,db.ForeignKey("pitches.id"))
 
-    def __init__(self,id,title,pitch):
+    def __init__(self,id,title,comment):
         self.id = id
-        self.title = title
 
         self.comment = comment
 
