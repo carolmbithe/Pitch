@@ -59,11 +59,11 @@ class Pitch(db.Model):
     # comments= db.relationship('Comment', backref='title', lazy='dynamic')
         # ser_likes = db.relationship('PostLikes', backref=db.backref('post', lazy='joined'),
         #                          lazy='dynamic', cascade='all, delete-orphan')
-    def __init__(self,id,title,pitch):
-        self.id = id
-        self.title = title
-
-        self.pitch = pitch
+    # def __init__(self,id,title,pitch):
+    #     self.id = id
+    #     self.title = title
+    #
+    #     self.pitch = pitch
 
 
 
@@ -72,7 +72,7 @@ class Pitch(db.Model):
         db.session.commit()
 
     @classmethod
-    def get_pitches(cls):
+    def get_pitches(cls,id):
         pitches = Pitch.query.order_by(Pitch.posted.desc())
         return pitches
 
@@ -88,10 +88,10 @@ class Comment(db.Model):
     user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
     pitch_id=db.Column(db.Integer,db.ForeignKey("pitches.id"))
 
-    def __init__(self,id,title,comment):
-        self.id = id
-
-        self.comment = comment
+    # def __init__(self,id,title,comment):
+    #     self.id = id
+    #
+    #     self.comment = comment
 
     def save_comment(self):
         db.session.add(self)
